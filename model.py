@@ -62,8 +62,9 @@ if __name__ == '__main__':
     data = data.drop(['Type_2'], axis=1)
     updateTypeColumn(data, 'Type_1', 'Fire')
     data['Type_1'] = data['Type_1'].apply(int)
-    training_output = [row[1]['Type_1'] for row in data.iterrows()][:int(len(data) * 0.7)] 
-    testing_output = [row[1]['Type_1'] for row in data.iterrows()][int(len(data) * 0.7):] 
+    print(data.corr())
+    #training_output = [row[1]['Type_1'] for row in data.iterrows()][:int(len(data) * 0.7)] 
+    #testing_output = [row[1]['Type_1'] for row in data.iterrows()][int(len(data) * 0.7):] 
 
     # training_data = training_data.dropna() # Removes any rows containing Null values
 
