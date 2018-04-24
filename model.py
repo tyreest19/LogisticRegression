@@ -61,10 +61,10 @@ if __name__ == '__main__':
     data = pd.read_csv('data/pokemon_alopez247.csv')
     data = data.drop(['Type_2'], axis=1)
     updateTypeColumn(data, 'Type_1', 'Fire')
-    training_output = [int(row[1]['Type_1']) for row in data.iterrows()][:int(len(data) * 0.7)] 
-    testing_output = [int(row[1]['Type_1']) for row in data.iterrows()][int(len(data) * 0.7):] 
-    print(len(training_output))
-    print(len(testing_output))
+    data['Type_1'] = data['Type_1'].apply(int)
+    training_output = [row[1]['Type_1'] for row in data.iterrows()][:int(len(data) * 0.7)] 
+    testing_output = [row[1]['Type_1'] for row in data.iterrows()][int(len(data) * 0.7):] 
+
     # training_data = training_data.dropna() # Removes any rows containing Null values
 
     # features = np.asarray([[age] for age in training_data['Age']])
