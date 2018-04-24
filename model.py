@@ -57,6 +57,7 @@ if __name__ == '__main__':
 
     data = pd.read_csv('data/pokemon_alopez247.csv')
     data = data.drop(['Type_2'], axis=1)
+    data.dropna()
     updateTypeColumn(data, 'Type_1', 'Fire')
     data['Type_1'] = data['Type_1'].apply(int)
     print(data.corr())
