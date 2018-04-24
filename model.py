@@ -27,14 +27,13 @@ def gradientDescent(x, y, m, theta, alpha, iterations=1500):
                     np.transpose(theta),
                     x[i]
                 )
-                gradient += (sigmoid(z) - y[i]) * x[i]
+                gradient += (sigmoid(z) - y[i]) * x[i][j]
             theta[j] = theta[j] - ((alpha/m) * gradient)
         print('Current Error is:', costFunction(x, y, m, theta))
     return theta
 
 def test(x, y, m, theta):
     correct = 0
-    incorrect = 0
     for i in range(m):
         z = np.dot(
                 np.transpose(theta),
@@ -45,9 +44,7 @@ def test(x, y, m, theta):
             correct += 1
         elif predicted_value < 0.5 and y[i] == 0:
             correct += 1
-        else:
-            incorrect += 1
-    return correct/m, incorrect/m
+    return correct/m, (1 - (correct/m))
 
 def updateTypeColumn(dataframe, columnName, columnValue):
     for index, row in dataframe.iterrows():
@@ -63,18 +60,11 @@ if __name__ == '__main__':
     updateTypeColumn(data, 'Type_1', 'Fire')
     data['Type_1'] = data['Type_1'].apply(int)
     print(data.corr())
-    #training_output = [row[1]['Type_1'] for row in data.iterrows()][:int(len(data) * 0.7)] 
-    #testing_output = [row[1]['Type_1'] for row in data.iterrows()][int(len(data) * 0.7):] 
-
-    # training_data = training_data.dropna() # Removes any rows containing Null values
-
-    # features = np.asarray([[age] for age in training_data['Age']])
-    # actual_values = np.asarray(training_data['Survived'])
-    # theta = np.random.uniform(size=len(features[0]))
-    # #print(theta)
-    # #print(len(features))
-    # #print(costFunction(features, actual_values, len(features), theta))
-    # #print(np.transpose(theta))
-    # print('Final theta\'s \n', gradientDescent(features, actual_values, len(features[0]), theta, 0.001))
-    # accuracy_rate, error_rate = test(features, actual_values, len(actual_values), theta)
-    # print('Accuracy: {accuracy} \nError: {error}'.format(accuracy=accuracy_rate, error=error_rate))
+    training_features = [[row[1]['Sp_Atk'], row[1]['Pr_Male']] for row in data.iterrows()][:int(len(data) * 0.7)]
+    testing_features = [[row[1]['Sp_Atk'], row[1]['Pr_Male']] for row in data.iterrows()][int(len(data) * 0.7):]
+    training_output = [row[1]['Type_1'] for row in data.iterrows()][:int(len(data) * 0.7)] 
+    testing_output = [row[1]['Type_1'] for row in data.iterrows()][int(len(data) * 0.7):] 
+    theta = np.random.uniform(size=len(training_features[0]))
+    print('Final theta\'s \n', gradientDescent(training_features, training_output, len(training_features[0]), theta, 0.001))
+    accuracy_rate, error_rate = test(testing_features, testing_output, len(testing_output), theta)
+    print('Accuracy: {accuracy} \nError: {error}'.format(accuracy=accuracy_rate, error=error_rate))
