@@ -1,8 +1,7 @@
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+from sklearn.model_selection import train_test_split
 def sigmoid(z):
     return 1/(1 + np.exp(-z))
 
@@ -61,11 +60,20 @@ if __name__ == '__main__':
     updateTypeColumn(data, 'Type_1', 'Fire')
     data['Type_1'] = data['Type_1'].apply(int)
     print(data.corr())
-    training_features = [[row[1]['Sp_Atk'], row[1]['Pr_Male']] for row in data.iterrows()][:int(len(data) * 0.7)]
-    testing_features = [[row[1]['Sp_Atk'], row[1]['Pr_Male']] for row in data.iterrows()][int(len(data) * 0.7):]
-    training_output = [row[1]['Type_1'] for row in data.iterrows()][:int(len(data) * 0.7)] 
-    testing_output = [row[1]['Type_1'] for row in data.iterrows()][int(len(data) * 0.7):] 
+    X = [[row[1]['Sp_Atk'], row[1]['Pr_Male']] for row in    
+          data.iterrows()]
+    y = [row[1]['Type_1'] for row in data.iterrows()]
+    training_features, testing_features, training_output, testing_output = train_test_split(X, 
+                   y, 
+                   test_size=0.7,  
+                   train_size=0.3,    
+                   random_state=42)
     theta = np.random.uniform(size=len(training_features[0]))
-    print('Final theta\'s \n', gradientDescent(training_features, training_output, len(training_features[0]), theta, 0.001))
+    print('Final theta\'s \n', 
+            gradientDescent(training_features, 
+            training_output, 
+            len(training_features[0]), theta, 0.001))
     accuracy_rate, error_rate = test(testing_features, testing_output, len(testing_output), theta)
-    print('Accuracy: {accuracy} \nError: {error}'.format(accuracy=accuracy_rate, error=error_rate))
+    print('Accuracy: {accuracy} \nError: '
+      '{error}'.format(accuracy=accuracy_rate,           
+       error=error_rate))
